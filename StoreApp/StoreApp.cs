@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Reflection;
 using Spectre.Console;
 namespace DSA.StoreApp;
 
@@ -93,9 +94,19 @@ public sealed class StoreApp
 
 
 
+
+
+
+
+
+
+
+
     // just for practice purposes: 
     public static void PracticeExercises()
     {
+
+        // ARRAYS:
         Console.WriteLine(Departments[0]); // Electronics.
         Console.WriteLine(Departments[^1]); // Sports.
 
@@ -108,8 +119,57 @@ public sealed class StoreApp
 
         string[] departmentCopy = new string[Departments.Length];
         Array.Copy(Departments, departmentCopy, Departments.Length);
-        Array.Sort(departmentCopy); 
-        
+        Array.Sort(departmentCopy);
+        Console.WriteLine("--------------");
+
+
+        // LISTS: 
+        var products = new List<string>();
+        products.Add("Wireless mouse");
+        products.Add("Coffee Beans");
+
+        Console.WriteLine(products.Count); // 2
+        Console.WriteLine(products.Capacity);  // at least 2
+
+        products.AddRange([ "Socks", "Deodorant"]);
+        products.Insert(1, "Desk Lamp"); // Wireless Mouse, Desk Lamp, Coffee Beans, Socks, Deodorant. 
+        foreach(string product in products)
+        {
+            Console.WriteLine(product);
+        }
+
+
+        Console.WriteLine(products[0]);  // Wireless Mouse.
+        Console.WriteLine(products[^1]);  // Deodorant
+        products[0] = "Keyboard"; 
+        Console.WriteLine(products[0]);
+
+
+        bool hasCoffee = products.Contains("Coffee"); // False
+        int socksIndex = products.IndexOf("Socks"); // [3]
+
+        /* inside of it is a lambda expression (mini, unnamed function), that defines the search condition. Where
+         name is a temporary variable representing each individual item as the loop checks the list, 
+        =>: lambda operator, which is read as "such that". name.Length > 5: condition being tested*/
+        bool hasLongName = products.Exists(name => name.Length > 5); // True
+        string? firstWithS = products.Find(name => name.StartsWith('S')); // Socks
+
+
+        // removing elements:
+        bool removed = products.Remove("Desk Lamp"); // True
+        products.RemoveAt(0); // removes element at index 0 
+        int removedCount = products.RemoveAll(name => name == "Deodorant"); // 1
+       // products.Clear(); // removes everything
+        Console.WriteLine("------------");
+
+
+        foreach(string product in products)
+        {
+            Console.WriteLine(product);
+        }
+
+        products.Sort();
+        products.Reverse();
 
     }
 }

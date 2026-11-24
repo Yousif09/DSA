@@ -2,13 +2,13 @@
 
 
 
-//object of StoreApp class:
-var app = new StoreApp();
-app.Run();
+////object of StoreApp class:
+//var app = new StoreApp();
+//app.Run();
 
 
 
 
-//StoreApp.PracticeExercises(); 
+StoreApp.PracticeExercises();
 
 

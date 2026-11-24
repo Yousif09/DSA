@@ -175,3 +175,132 @@ Arrays:
 
 
 
+List<T> Fundamentals: 
+
+	Our store departments work well in an array because their number if fixed. But products are different. While the
+	application runs, users need to add products, update them, and eventually remove them. We could create a larger array and manually
+	copy elements whenever the collection changes, but that would add repetitive bookkeeping to a common task. .NET
+	provides a collection designed for this situation: List<T>
+
+	* What is List<T>: List<T> is an ordered, generic collection whose size can change. The T is a type parameter. When we create a
+	   List<string>, every element is a string. A List<Product> stores Product objects. 
+
+	   * A list keeps its elements in a defined order.
+	   * it uses zero-based indexes just like an array. 
+	   * Elements can be added, inserted, replaced, and removed.
+	   * Its Count changes as elements are added or removed. 
+	   * its generic element type gives compile-time type safety. 
+
+	   Internally, List<T> uses an array-like storage area. When that storage becomes full , the list creates a 
+	   larger area and moves its elements. The collection handles this process for us, which gives us convenient growth while preserving
+	   indexed access.
+
+	   * creating an empty list when the values will arrive later: 
+	   
+	   var products = new List<string>(); 
+
+	   When values are already known, initalize the list with a collection expression:
+	   List<string> products = {
+
+	       "Wireless mouse",
+		   "Coffee Beans",
+		   "Running Shoes"
+	   };
+
+	   The explicit type on the left tells the compiler to create a list from the collection expression. Using 
+	   var products { } does not provide enough information for the compiler to determine the collection type.
+	   
+	   * Count and Capacity: A list has two related measurements. Count is the number of elements currently in the list. Capacity is the
+			number of elements its internal storage can currently hold before it needs to grow. 
+
+			
+        // LISTS: 
+        var products = new List<string>();
+        products.Add("Wireless mouse");
+        products.Add("Coffee Beans");
+
+        Console.WriteLine(products.Count); // 2
+        Console.WriteLine(products.Capacity);  // at least 2
+	
+		Most application code should make decisions using Count. Capacity is an implementation detail that 
+		can occasionally help you when you already know a collection will become large, but you should not treat it as 
+		the number of meaningful elements. 
+
+		Adding and Inserting Elements: Add places one element at the end. AddRange appends several elements. Insert places
+		an element at a particular index and shifts later elements to make space. 
+
+		products.AddRange([ "Socks", "Deodorant"]);
+        products.Insert(1, "Desk Lamp"); // Wireless Mouse, Desk Lamp, Coffee Beans, Socks, Deodorant. 
+        foreach(string product in products)
+        {
+            Console.WriteLine(product);
+        }
+
+		* Use Insert only when a specific position matters. If order is not important, adding at the end communicates the intention more clearly.
+		An invalid insertion index throws ArgumentOutOfRangeException.
+
+		* Reading and Updating Elements: Lists use the same index syntax as arryays. Valid indexes run from Zero to Count -1. 
+		Console.WriteLine(products[0]);  // Wireless Mouse.
+        Console.WriteLine(products[^1]);  // Deodorant
+        products[0] = "Keyboard"; 
+        Console.WriteLine(products[0]);
+
+		* The index changes an existing position, it does not add a new one. Writing products[3] = "Lamp" when the Count is 
+		three throws an Exception. Use Add to create a new element. 
+
+		* Finding Elements: Lists provide methods for common searches. Contains checks for a value, IndexOf returns its position, 
+		   Exists checks whether any element matches a condition, and Find returns the first match: 
+
+			bool hasCoffee = products.Contains("Coffee"); // False
+			int socksIndex = products.IndexOf("Socks"); // [3]
+
+			/* inside of it is a lambda expression (mini, unnamed function), that defines the search condition. Where
+			 name is a temporary variable representing each individual item as the loop checks the list, 
+			=>: lambda operator, which is read as "such that". name.Length > 5: condition being tested*/
+			bool hasLongName = products.Exists(name => name.Length > 5); // True
+			string? firstWithS = products.Find(name => name.StartsWith('S')); // Socks
+
+			Find returns the elements types dfefault value when there is no match, so reference type result 
+			SHOULD be checked for null. 
+
+
+
+		 * Removing Elements: Lists supports several form of removal:
+        
+			bool removed = products.Remove("Desk Lamp"); // True
+			products.RemoveAt(0); // removes element at index 0 
+			int removedCount = products.RemoveAll(name => name == "Deodorant"); // 1
+			products.Clear(); // removes everything
+
+			Remove returns false when it cannot find the value. RemoveAt throws when the index is invalid. RemoveAll
+			returns the number of matching elements to be removed.
+
+			Not yet in this project will a product removal be added to the store. This is because we will combine removal with Stack<T> so the user
+			can undo the most recent removal. 
+
+			
+
+		* Iteration and Sorting: use foreach when you need each element and for loop when the index matters. Do not add or
+		   remove elements inside a foreach loop; changing the collection while it is being enumerated causes an execption. 
+		   
+		   
+			foreach(string product in products)
+			{
+				Console.WriteLine(product);
+			}
+
+			products.Sort();
+			products.Reverse();
+
+			* Sort and Reverse mutate the original list. Custom objects need a comparison rule. For example:
+			   products.Sort((left, right) => left.Name.CompareTo(right.Name)) : this sorts product objects by name.
+
+
+
+
+		* Array or List?
+		   
+		   * Choose an array when the number of elements is fixed and indexed storage is the clearest representation.
+		   * Choose List<T> when elements need to be added or removed while the collection is in use.
+		   * Both collections are ordered, zero-indexed, generic, iterable, and allow duplicate values.
+		   * Neither structure automatically provides meaningful key-based lookup or uniqueness rule. Later structures will introduce collections for that. 
