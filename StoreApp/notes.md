@@ -35,6 +35,143 @@ WHy do these ideas still matter?
 
 Arrays: 
 
-	The store management system needs a set of departments: Electronics, Groceries, Clothing, Home, and Sports. These departments will remain
+	* The store management system needs a set of departments: Electronics, Groceries, Clothing, Home, and Sports. These departments will remain
 	fixed in the first version of the application. We need one variable that can hold several related values in a defined order. We also know how many values there will
-	be before the application starts. This is a natrual problem for our first data structure: an array.
+	be before the application starts. This is a natrual problem for our first data structure: an array. 
+
+	* What is an array? An array is a collection that stores a fixed number of values of the same type. Each value occupies a numbered position called an
+	index. We use that index to read or replace a particular value. Arrays are among the most fundamental data structures in programming. Many more flexible collections are 
+	built on top of array-like storage internally. Which makes arrays a useful starting point for understanding how collections organize values. 
+
+	* An array has one element type, such as string, int, or Product.
+	* it's length is decided when the array is created.
+	* it's elements are stored in a defined order.
+	* Each element can be accessed using its numeric index.
+	* The values can change, BUT the number of positions CANNOT change. 
+
+	* You can also create an array by specifying its length before assigning its values. When C# creates an array like:
+	string[] departments = new string[5] --> it immediately creates five positions. Until we assign strings to them, these positions contain 
+	the default value for string, which is null. Numeric arrays begin with zeroes, and bool ararys begin with false
+	C# arrays are (zero-indexed). First element is at index 0, the second is at index 1, and final element is at index (Length - 1).
+	An array with three elements has valid indexes from 0 to 2. Trying to access index 3 causes an IndexOutOfRangeException at runtime. You can also use
+	the index-from-end operator. departments[^1] means the last element, while departments[^2] means the second to last element.
+	Unlike a normal index, ^1 refers to the final element, 0^ refers to the position after the end and cannot be used to read an element.
+
+	* Length and Iteration: The Length property tells us how many elements an array contains:
+	string[] departments = ["Electronics", "Groceries", "Clothing"];
+	Console.WriteLine(departments.Length); // 3
+
+	* use foreach loop when you want to process every element and do not need its index:
+	foreach(string department in departments)  {
+	   Console.WriteLine(department); 
+	}
+
+	* use a for loop when the index is part of the work. The condition uses <, not <= because
+	Length propery is one greater than the final index. 
+	for(int i=0; i < departments.Length; i++) {
+	   
+	   Console.WriteLine($"{i + 1}. {departments[i]}"); 
+
+	   //1. Electronics
+	   //2. Groceries... and so on
+
+	}
+
+
+
+	* Arrays are fixed-size, Not read-only: A fixed size does NOT mean that an array's elements are permanent. We can 
+	replace a value at an existing index:
+
+	string[] departments = ["Electronics", "Groceries", "Clothing"];
+	departments[1] = "Food"; 
+	Console.WriteLine(departments[1]); // Now says Food instead of groceries.
+
+	* What we can NOT do is add a sixth position to something like a five-element array or remove one of its positions.
+	To represent a different number of elements, we must create another array with a different length and copy the values we want to 
+	keep. That limitation is useful when the number of values is genuinely fixed, for example something like departments in a store that are already defined. 
+	It becomes inconvenient when values need to be added and removed regularly. Later, List<T> will solve that problem.
+
+	* Arrays are Reference Types: an array is a reference type, even when it contains value types such as int. Assigning an array
+	variable to another variable does NOT duplicate its elements. But variables refer to the same array. 
+	int[] original = { 10, 20, 30 };
+	int[] sameArray = original;
+
+	sameArray[0] = 99;
+	Console.WriteLine(original[0]); 
+
+	* Changing the array through sameArray is visible through original because there is only one array. When you need an independent copy, create a
+	new array and copy the elements. 
+
+	int[] original = { 10, 20, 30 };
+	int[] copy = new int[original.Length];
+
+	Array.Copy(original, copy, original.Length);
+	copy[0] = 99;
+
+	Console.WriteLine(original[0]); // 10
+	Console.WriteLine(copy[0]); // 99 
+
+
+	* Useful Array Operations: The Array class provides static methods for common operations: 
+		string[] departments = {"Electronics", "Sports", "Home"}; 
+		int homeIndex = Array.IndexOf(departments, "Home");
+		Console.WriteLine(homeIndex); //2
+
+		Array.Sort(departments); // Electronics, Home, Sports
+		Array.Reverse(departments); // Sports, Home, Electronics (reversed order of the sort function) 
+
+		* Array.IndexOf returns the matching elements index or -1 when no match exists. Array.Sort and Array.Reverese modify 
+		the original array rather than producing a seperate result. Always ask yourself if the original order is acceptable before sorting or
+		reversing an array. If the order has meaning, make a copy first. 
+
+
+		* Multidimensional Arrays and Jagged Arrays: Most arrays in everyday application code are one-dimensional, but C# also supports
+			rectangular multidimensional arrays. A two-dimensional array uses two indexes, often visualized as rows and columns: 
+
+			regular two dimensional array: 
+			string[,] shelfLocations =
+			{
+				{"A1", "A2", "A3" }, // row 0
+				{"B1", "B2", "B3" } // row 1
+
+			};
+
+			Console.WriteLine(shelfLocations[0, 1]); // A2
+			Console.WriteLine(shelfLocations[1, 2]); // B3
+
+
+			Jagged Array: a jagged array is an array whose elements are themselves arrays. Each inner array can have a 
+			different length. 
+			
+			string[][] productByAisle = [
+
+				["Cofee", "Tea"],
+				["Bread", "Rice", "Pasta"],
+				["Soap"]
+
+			 ];
+
+			Console.WriteLine(productByAisle[1][2]); //pasta
+
+			* You should regonize both forms, but our department feature needs only a simple one dimensional array. Choose
+				additional dimensions only when the data genuinely has a grid or nested shape.
+
+			* So When should you use an array?:
+				An array is a good choice when: 
+				 
+				 * You know the number of elements when the array is created.
+				 * That number will NOT change while the array is being used. 
+				 * The values all share one element type.
+				 * Their order matters or you need to access them by position
+				 * A simple, direct collection is preferable to a growable, dynamic one.
+
+				 An array is usually not the best choice when the collection needs frequent additions or removals, when each
+				 value needs a meaningful lookup key, or when duplicate values must be prevented automatically. 
+
+
+
+
+
+
+
+
