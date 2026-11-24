@@ -1,3 +1,9 @@
+C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.csproj.AssemblyReference.cache
+C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.AssemblyInfoInputs.cache
+C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.AssemblyInfo.cs
+C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.csproj.CoreCompileInputs.cache
+C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.sourcelink.json
 C:\Users\yalbo\Projects\DSA\StoreApp\bin\Debug\net10.0\StoreApp.exe
 C:\Users\yalbo\Projects\DSA\StoreApp\bin\Debug\net10.0\StoreApp.deps.json
 C:\Users\yalbo\Projects\DSA\StoreApp\bin\Debug\net10.0\StoreApp.runtimeconfig.json
@@ -5,12 +11,6 @@ C:\Users\yalbo\Projects\DSA\StoreApp\bin\Debug\net10.0\StoreApp.dll
 C:\Users\yalbo\Projects\DSA\StoreApp\bin\Debug\net10.0\StoreApp.pdb
 C:\Users\yalbo\Projects\DSA\StoreApp\bin\Debug\net10.0\Spectre.Console.dll
 C:\Users\yalbo\Projects\DSA\StoreApp\bin\Debug\net10.0\Spectre.Console.Ansi.dll
-C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.csproj.AssemblyReference.cache
-C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.AssemblyInfoInputs.cache
-C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.AssemblyInfo.cs
-C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.csproj.CoreCompileInputs.cache
-C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.sourcelink.json
 C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.csproj.Up2Date
 C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\StoreApp.dll
 C:\Users\yalbo\Projects\DSA\StoreApp\obj\Debug\net10.0\refint\StoreApp.dll

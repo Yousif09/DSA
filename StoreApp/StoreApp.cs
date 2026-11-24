@@ -1,6 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using System.Reflection;
 using Spectre.Console;
+
+
 namespace DSA.StoreApp;
 
 
@@ -22,7 +24,32 @@ public sealed class StoreApp
         "Clothing",
         "Home",
         "Sports"
-    }; 
+    };
+
+
+    /* List that represents the products in the store.
+     * NOTE: it is readonly which prevents assigning a different list to Products. The list itself
+     remaing mutable, so the application can still call Add and update its Product objects. */
+    private static readonly List<Product> Products =
+    [
+        new Product
+        {
+            Name = "Wireless Mouse",
+            Sku = "ELE-001",
+            Price = 24.99m,
+            Department = "Electronics",
+            StockQuantity = 12
+        },
+
+        new Product
+        {
+            Name = "Coffee Beans",
+            Sku = "GRO-004",
+            Price = 14.50m,
+            Department = "Groceries",
+            StockQuantity = 20
+        }
+    ];
 
     // when function is called this goes in a loop until the user exits. 
     public void Run()
@@ -37,7 +64,7 @@ public sealed class StoreApp
                 new SelectionPrompt<string>()
                 .Title("What would you like to do?")
                 .PageSize(5)
-                .AddChoices("View Departments", "Exit"));
+                .AddChoices("View Departments", "Manage Products", "Exit"));
 
 
             switch(choice)
@@ -45,6 +72,9 @@ public sealed class StoreApp
                 case "View Departments":
                     ShowDepartments();
                     break;
+                case "Manage Products":
+                    ShowProductMenu();
+                    break; 
                 case "Exit":
                     isRunning = false;
                     break;
@@ -89,6 +119,198 @@ public sealed class StoreApp
         Console.ReadKey(intercept: true); 
     }
 
+
+    // shows all the options you can do to manipulate the products, simply viewing all of them, adding, or updating, or returning to the main menu. 
+    private static void ShowProductMenu()
+    {
+        bool returnToMainMenu = false; 
+
+        while(!returnToMainMenu)
+        {
+            AnsiConsole.Clear();
+
+            string choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                .Title("[green]Product Management[/]")
+                .AddChoices(
+                    "View All Products", "Add Product", "Update Product", "Return to Main Menu"));
+
+            switch(choice)
+            {
+                case "View All Products":
+                    ShowProducts();
+                    break;
+
+                case "Add Product":
+                    AddProduct();
+                    break;
+                case "Update Product": 
+                    UpdateProduct();
+                    break;
+                case "Return to Main Menu":
+                    returnToMainMenu = true;
+                    break; 
+            }
+        }
+
+    }
+
+
+    // shows all of our products in store:
+    private static void ShowProducts()
+    {
+        AnsiConsole.Clear();
+
+        var table = new Table()
+            .Title("[green]Products[/]")
+            .AddColumn("SKU")
+            .AddColumn("Name")
+            .AddColumn("Department")
+            .AddColumn("Price")
+            .AddColumn("Stock");
+
+        foreach(Product product in Products)
+        {
+            table.AddRow(
+                Markup.Escape(product.Sku),
+                Markup.Escape(product.Name),
+                Markup.Escape(product.Department),
+                product.Price.ToString(),
+                product.StockQuantity.ToString());
+        }
+
+        AnsiConsole.Write(table);
+        Pause(); 
+    }
+
+
+
+
+    // adds a product to the list:
+    private static void AddProduct()
+    {
+        AnsiConsole.Clear();
+
+        string sku = AnsiConsole.Prompt(
+            new TextPrompt<string>("SKU:")
+            .Validate(value => !string.IsNullOrWhiteSpace(value)
+            ? ValidationResult.Success()
+            : ValidationResult.Error("[red]SKU is required.[/]")))
+            .Trim()
+            .ToUpperInvariant(); 
+
+        if(Products.Exists(product => product.Sku == sku))
+        {
+            AnsiConsole.MarkupLine($"[red]A product with SKU {Markup.Escape(sku)} already exists.[/]");
+            Pause();
+            return;
+        }
+
+        string name = AnsiConsole.Prompt(
+           new TextPrompt<string>("Name:")
+           .Validate(value => !string.IsNullOrWhiteSpace(value)
+           ? ValidationResult.Success()
+           : ValidationResult.Error("[red]Name is required.[/]")))
+           .Trim();
+
+        string department = AnsiConsole.Prompt(
+           new SelectionPrompt<string>()
+           .Title("Department:")
+           .AddChoices(Departments));
+
+
+        decimal price = AnsiConsole.Prompt(
+          new TextPrompt<decimal>("Price:")
+          .Validate(value => value >= 0
+          ? ValidationResult.Success()
+          : ValidationResult.Error("[red]Price cannot be negative.[/]")));
+
+        int stockQuantity = AnsiConsole.Prompt(
+          new TextPrompt<int>("Stock Quantity:")
+          .Validate(value => value >= 0
+          ? ValidationResult.Success()
+          : ValidationResult.Error("[red]Stock quantity cannot be negative.[/]"))); 
+
+
+        Products.Add(new Product
+        {
+            Name = name,
+            Sku = sku,
+            Price = price,
+            Department = department,
+            StockQuantity = stockQuantity
+        });
+
+        AnsiConsole.MarkupLine("[green]Product added successfully.[/]");
+        Pause();
+
+
+    }
+
+
+
+    
+
+
+    // updates a current product:
+    private static void UpdateProduct()
+    {
+        AnsiConsole.Clear(); 
+
+        if(Products.Count == 0)
+        {
+            AnsiConsole.MarkupLine("[yellow]There are no products to update.[/]");
+            Pause();
+            return;
+        }
+
+        string selectedSku = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+            .Title("Choose a product:")
+            .AddChoices(Products.Select(product => product.Sku)));
+
+        Product product = Products.Find(product => product.Sku == selectedSku);
+
+        product.Name = AnsiConsole.Prompt(
+        new TextPrompt<string>("Name:")
+        .DefaultValue(product.Name)
+        .Validate(value => !string.IsNullOrWhiteSpace(value)
+        ? ValidationResult.Success()
+        : ValidationResult.Error("[red]Name is required.[/]")))
+        .Trim();
+
+        product.Department = AnsiConsole.Prompt(
+        new SelectionPrompt<string>()
+        .Title("Department:")
+        .AddChoices(Departments));
+
+        product.Price = AnsiConsole.Prompt(
+         new TextPrompt<decimal>("Price:")
+         .DefaultValue(product.Price)
+          .Validate(value => value >= 0
+          ? ValidationResult.Success()
+          : ValidationResult.Error("[red]Price cannot be negative.[/]")));
+
+
+        product.StockQuantity = AnsiConsole.Prompt(
+           new TextPrompt<int>("Stock Quantity:")
+           .DefaultValue(product.StockQuantity)
+           .Validate(value => value >= 0
+           ? ValidationResult.Success()
+           : ValidationResult.Error("[red]Stock quantity cannot be negative.[/]")));
+
+        AnsiConsole.MarkupLine("[green]Product updated successfully.[/]");
+        Pause(); 
+
+    }
+
+
+    // the product methods all pause before returning:
+    private static void Pause()
+    {
+        AnsiConsole.MarkupLine("[grey]Press any key to return...[/]");
+        Console.ReadKey(intercept: true);
+    }
 
 
 
